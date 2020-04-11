@@ -1,5 +1,6 @@
 package com.kevin.test;
 
+import com.kevin.dao.EmployeeMapper;
 import com.kevin.mybatis.Employee;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -11,6 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class MybatisTest {
+
+    public SqlSessionFactory getSqlSessionFactory() throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        return sqlSessionFactory;
+    }
 
     @Test
     public void test() throws IOException {
@@ -27,5 +35,23 @@ public class MybatisTest {
             sqlSession.close();
         }
         System.out.println(employee);
+    }
+
+    @Test
+    public void test1() throws IOException {
+        //1.获取SqlSessionFactory对象
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        //2.获取SqlSession对象
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        //3获取接口的实现类对象
+        try {
+            EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+            Employee emp = mapper.getEmpById(1);
+            System.out.println(emp);
+        } finally {
+            sqlSession.close();
+        }
+
+
     }
 }
