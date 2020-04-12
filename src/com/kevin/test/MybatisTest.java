@@ -52,6 +52,30 @@ public class MybatisTest {
             sqlSession.close();
         }
 
+    }
+
+    /**
+     * 测试增删改
+     * @throws IOException
+     */
+    @Test
+    public void test2() throws IOException {
+        //1.获取SqlSessionFactory对象
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        //2.获取SqlSession对象（不会自动提交数据）
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        //3获取接口的实现类对象
+        try {
+            EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+            //进行测试
+            Employee emp = new Employee(null, "test1","test1@123.com" ,"1");
+            mapper.addEmp(emp);
+            //手动提交数据
+            sqlSession.commit();
+        } finally {
+            sqlSession.close();
+        }
 
     }
+
 }
